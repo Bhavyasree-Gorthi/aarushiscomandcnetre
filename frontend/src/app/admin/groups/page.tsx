@@ -3,7 +3,7 @@
 /**
  * Group Management Page
  * 
- * Allows admins to view, create, and manage Keycloak groups.
+ * Allows admins to view, create, and manage groups.
  */
 
 import { useCallback, useEffect, useState } from 'react'
@@ -183,7 +183,7 @@ export default function GroupsPage() {
         <div>
           <h1 className='text-2xl font-semibold text-gray-900'>Group Management</h1>
           <p className='text-gray-500 mt-1'>
-            Manage Keycloak groups and their members
+            Manage groups and their members
           </p>
         </div>
         <Button onClick={() => setCreateDialogOpen(true)} className='gap-2'>

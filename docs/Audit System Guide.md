@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Supervity template includes a comprehensive audit logging system that provides complete visibility into all system activity. This is critical for:
+The AutoPilot template includes a comprehensive audit logging system that provides complete visibility into all system activity. This is critical for:
 
 - **Compliance**: Track all user actions for regulatory requirements
 - **Security**: Detect suspicious activity and unauthorized access

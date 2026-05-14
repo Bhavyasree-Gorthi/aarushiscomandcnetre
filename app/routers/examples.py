@@ -171,5 +171,5 @@ def get_secure_asset(
     return {"asset": "Top Secret Data", "accessed_from": country}
 
 
-# For additional context-aware scenarios, see docs/Keycloak Developer Guide.md
+# For additional context-aware scenarios, see the project documentation.
 

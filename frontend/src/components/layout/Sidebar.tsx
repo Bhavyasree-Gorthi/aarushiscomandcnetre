@@ -73,22 +73,9 @@ const navItems: NavSection[] = [
     ],
   },
   {
-    title: 'Administration',
-    items: [
-      { href: '/admin/users', label: 'User Management', icon: Icons.users, adminOnly: true },
-      { href: '/admin/roles', label: 'Role Management', icon: Icons.shield, adminOnly: true },
-      { href: '/admin/groups', label: 'Group Management', icon: Icons.network, adminOnly: true },
-      { href: '/admin/sessions', label: 'User Sessions', icon: Icons.device, adminOnly: true },
-      { href: '/admin/events', label: 'Login Events', icon: Icons.activity, adminOnly: true },
-      { href: '/admin/audit', label: 'Audit Logs', icon: Icons.fileText, adminOnly: true },
-      { href: '/admin/settings', label: 'Admin Settings', icon: Icons.settings, adminOnly: true },
-    ],
-  },
-  {
     title: 'System',
     items: [
       { href: '/settings', label: 'Settings', icon: Icons.settings },
-      { href: '/brand', label: 'Brand & Design', icon: Icons.palette },
     ],
   },
 ]
@@ -277,7 +264,7 @@ export function Sidebar() {
             {!isCollapsed && (
               <div className='flex flex-col transition-transform duration-200 group-hover:translate-x-0.5'>
                 <span className='font-display text-lg font-bold tracking-tight text-brand-navy'>
-                  Supervity
+                  AutoPilot
                 </span>
                 <span className='text-[10px] font-medium uppercase tracking-widest text-brand-muted'>
                   Command Center

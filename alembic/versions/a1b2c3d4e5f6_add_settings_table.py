@@ -45,7 +45,7 @@ def upgrade() -> None:
     op.execute(
         """
         INSERT INTO settings (key, value, description)
-        VALUES ('approved_email_domains', 'supervity.ai', 'Comma-separated list of email domains that get instant user access')
+        VALUES ('approved_email_domains', 'example.com', 'Comma-separated list of email domains that get instant user access')
         """
     )
 

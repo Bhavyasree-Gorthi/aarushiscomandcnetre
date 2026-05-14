@@ -22,7 +22,7 @@ interface CardWatermarkProps {
 }
 
 /**
- * Supervity "S" logomark watermark for cards.
+ * AutoPilot "S" logomark watermark for cards.
  * Creates a subtle branded texture inside card components.
  *
  * @example
@@ -59,7 +59,7 @@ export function CardWatermark({
         height: size,
       }}
     >
-      {/* The Supervity "S" logomark as an SVG watermark */}
+      {/* The AutoPilot "S" logomark as an SVG watermark */}
       <svg
         viewBox='0 0 200 200'
         fill='none'

@@ -34,7 +34,7 @@ export interface Policy {
   summary: string | null
   natural_language: string
   policy_type: 'logical' | 'natural_language'
-  policy_scope: 'base' | 'instruction' | 'custom'
+  policy_scope?: 'base' | 'instruction' | 'custom'
   dsl: PolicyDSL | null
   refined_instruction: string | null
   ai_instruction: string | null
@@ -42,7 +42,7 @@ export interface Policy {
   is_active: boolean
   priority: number
   tags: string[]
-  source: string
+  source?: string
   created_at: string
   updated_at: string
   execution_count: number

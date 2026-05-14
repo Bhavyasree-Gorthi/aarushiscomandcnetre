@@ -152,7 +152,7 @@ export function CreateWithAI({ onPolicyCreate, onCancel }: CreateWithAIProps) {
   // Example policies
   const examples = [
     "Auto-approve invoices under $500 from approved vendors",
-    "For vendor Supervity, skip GST validation and approve directly",
+    "For vendor Acme Corp, skip GST validation and approve directly",
     "Escalate support tickets from enterprise customers to Tier 2",
     "When a new employee joins, assign the onboarding checklist",
   ]

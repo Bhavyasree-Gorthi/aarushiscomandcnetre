@@ -130,12 +130,12 @@ export default function SettingsPage() {
                   {session?.user?.email}
                 </p>
                 <p className='mt-1 text-xs text-muted-foreground'>
-                  Managed by Keycloak SSO
+                  AutoPilot Developer
                 </p>
               </div>
               <Button variant='outline'>
                 <Icons.externalLink className='mr-2 h-4 w-4' />
-                Manage in Keycloak
+                Edit Profile
               </Button>
             </div>
           </CardContent>

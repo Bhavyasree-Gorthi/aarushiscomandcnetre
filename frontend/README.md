@@ -1,4 +1,4 @@
-# Supervity AI Command Center - Frontend
+# AutoPilot Command Center - Frontend
 
 A [Next.js](https://nextjs.org) application built with React 19, TypeScript, and Tailwind CSS.
 

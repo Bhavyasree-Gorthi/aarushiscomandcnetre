@@ -1,20 +1,25 @@
 # app/routers/auth.py
 """
 Authentication and registration endpoints.
+
+When AUTH_BYPASS=true (default in dev), registration returns a mock success response
+since there is no Keycloak backend. Disable AUTH_BYPASS and configure Keycloak
+for real user registration.
 """
 
 import logging
+import os
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from ..schemas import UserRegistration, UserRegistrationResponse
 from ..security import get_current_user
-from ..services.keycloak_admin import keycloak_admin
-from .admin import validate_password_strength
 
 log = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
+
+AUTH_BYPASS = os.getenv("AUTH_BYPASS", "false").lower() == "true"
 
 
 @router.post("/register", response_model=UserRegistrationResponse)
@@ -22,18 +27,23 @@ async def register_user(registration: UserRegistration):
     """
     Register a new user.
 
-    - Users from approved domains (e.g., @supervity.ai) get instant access with 'user' role.
-    - Users from other domains get 'pending' role and require admin approval.
-    - All users receive an email verification link.
-
-    This endpoint is public (defined in public.map.json).
+    - When AUTH_BYPASS=true: returns a mock success response (no Keycloak needed).
+    - When AUTH_BYPASS=false: requires Keycloak to be configured.
     """
-    # Validate password strength
-    is_valid, error_msg = validate_password_strength(registration.password)
-    if not is_valid:
-        raise HTTPException(status_code=400, detail=error_msg)
+    if AUTH_BYPASS:
+        # Dev mode — return mock registration success
+        return UserRegistrationResponse(
+            user_id=f"dev-{registration.email.split('@')[0]}",
+            email=registration.email,
+            role="user",
+            requires_approval=False,
+            message="Registration successful (dev mode — AUTH_BYPASS is enabled).",
+        )
 
+    # Production mode — requires keycloak_admin service
     try:
+        from ..services.keycloak_admin import keycloak_admin
+
         result = await keycloak_admin.create_user(
             email=registration.email,
             password=registration.password,
@@ -60,6 +70,11 @@ async def register_user(registration: UserRegistration):
             requires_approval=result["requires_approval"],
             message=message,
         )
+    except ImportError:
+        raise HTTPException(
+            status_code=501,
+            detail="Registration requires Keycloak. Set AUTH_BYPASS=true for dev mode or configure Keycloak.",
+        )
     except Exception as e:
         log.error(f"Registration failed: {e}")
         raise HTTPException(status_code=400, detail=str(e))
@@ -84,4 +99,3 @@ async def get_pending_status(user: dict = Depends(get_current_user)):
         if is_pending
         else "Your account is active.",
     }
-

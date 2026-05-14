@@ -248,7 +248,7 @@ export default function RegisterPage() {
                 Create Account
               </CardTitle>
               <p className='mt-2 text-sm text-muted-foreground'>
-                Join the Supervity Command Center
+                Join the AutoPilot Command Center
               </p>
             </motion.div>
           </CardHeader>

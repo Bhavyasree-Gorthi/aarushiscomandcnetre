@@ -1,7 +1,7 @@
 # Frontend Design System
 
 ## 1. Implementation Guide
-This project uses **Tailwind CSS** with a custom configuration to match the "Ampersand" brand identity.
+This project uses **Tailwind CSS** with a custom configuration to match the AutoPilot design system.
 
 ### Fonts
 *   **Headings:** Use `font-display` (Funnel Display).

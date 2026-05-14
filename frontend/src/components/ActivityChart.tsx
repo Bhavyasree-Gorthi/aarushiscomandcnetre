@@ -1,6 +1,5 @@
 'use client'
 
-import { useMemo } from 'react'
 import {
   AreaChart,
   Area,
@@ -16,22 +15,16 @@ import { CardWatermark } from '@/components/ui/card-watermark'
 import { Icons } from '@/components/ui/icons'
 import { cn } from '@/lib/utils'
 
-// Generate realistic activity data for the past 7 days
-function generateActivityData() {
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  const today = new Date().getDay()
-
-  // Reorder days to end with today
-  const orderedDays = [...days.slice(today), ...days.slice(0, today)]
-  if (today === 0) orderedDays.push('Sun')
-
-  return orderedDays.slice(-7).map((day, index) => ({
-    name: day,
-    sessions: Math.floor(Math.random() * 200) + 300 + index * 15,
-    success: Math.floor(Math.random() * 50) + 450 + index * 10,
-    aiCalls: Math.floor(Math.random() * 100) + 200 + index * 8,
-  }))
-}
+// Static activity data — deterministic to avoid SSR hydration mismatch
+const ACTIVITY_DATA = [
+  { name: 'Mon', sessions: 315, success: 460, aiCalls: 210 },
+  { name: 'Tue', sessions: 348, success: 485, aiCalls: 228 },
+  { name: 'Wed', sessions: 390, success: 502, aiCalls: 245 },
+  { name: 'Thu', sessions: 425, success: 498, aiCalls: 260 },
+  { name: 'Fri', sessions: 460, success: 520, aiCalls: 275 },
+  { name: 'Sat', sessions: 280, success: 440, aiCalls: 195 },
+  { name: 'Sun', sessions: 310, success: 455, aiCalls: 208 },
+]
 
 // Custom tooltip component
 function CustomTooltip({
@@ -79,8 +72,7 @@ export function ActivityChart({
   title = 'Weekly Activity',
   description = 'AI interactions over the past 7 days',
 }: ActivityChartProps) {
-  // Memoize data so it doesn't regenerate on every render
-  const data = useMemo(() => generateActivityData(), [])
+  const data = ACTIVITY_DATA
 
   // Calculate summary stats
   const totalSessions = data.reduce((acc, d) => acc + d.sessions, 0)

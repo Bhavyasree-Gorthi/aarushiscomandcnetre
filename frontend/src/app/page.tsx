@@ -1,17 +1,13 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { signIn } from 'next-auth/react'
 import { motion, useInView } from 'framer-motion'
 import apiClient from '@/lib/api-client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CardWatermark } from '@/components/ui/card-watermark'
 import { Icons } from '@/components/ui/icons'
-import { Logomark } from '@/components/brand'
-import { Skeleton, SkeletonCard } from '@/components/ui/skeleton'
 import { ActivityChart } from '@/components/ActivityChart'
-import { useSessionRefresh } from '@/hooks'
 import { cn } from '@/lib/utils'
 
 // Animation variants
@@ -297,208 +293,8 @@ function DiagnosticsCard() {
   )
 }
 
-// Loading skeleton for dashboard
-function DashboardSkeleton() {
-  return (
-    <div
-      className='space-y-6'
-      role='status'
-      aria-live='polite'
-      aria-label='Loading dashboard'
-    >
-      {/* Screen reader announcement */}
-      <span className='sr-only'>Loading dashboard content...</span>
-
-      {/* Hero skeleton */}
-      <div className='space-y-4 py-2'>
-        <Skeleton className='h-12 w-3/4 max-w-md' />
-        <Skeleton className='h-6 w-1/2 max-w-sm' />
-      </div>
-
-      {/* Stats skeleton */}
-      <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
-        {[...Array(4)].map((_, i) => (
-          <SkeletonCard key={i} />
-        ))}
-      </div>
-
-      {/* Cards skeleton */}
-      <div className='grid gap-6 lg:grid-cols-12'>
-        <div className='lg:col-span-7'>
-          <SkeletonCard className='h-[300px]' />
-        </div>
-        <div className='lg:col-span-5'>
-          <SkeletonCard className='h-[300px]' />
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Sign-in Card
-function SignInCard() {
-  return (
-    <div className='flex min-h-[500px] items-center justify-center'>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-      >
-        <Card className='relative w-full max-w-md overflow-hidden bg-white shadow-float-lg transition-shadow duration-500 hover:shadow-accent'>
-          <CardWatermark opacity={4} scale={1} />
-          <CardHeader className='relative z-10 space-y-4 pb-8 text-center'>
-            <motion.div
-              className='mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-brand-navy shadow-xl'
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{
-                delay: 0.2,
-                type: 'spring',
-                stiffness: 200,
-                damping: 15,
-              }}
-            >
-              <Logomark variant='light' size={48} />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-            >
-              <CardTitle className='text-display-5 font-bold text-brand-navy'>
-                Supervity
-              </CardTitle>
-              <p className='mt-2 text-muted-foreground'>
-                Command Center Access
-              </p>
-            </motion.div>
-          </CardHeader>
-          <CardContent className='relative z-10 space-y-4 px-8 pb-8'>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.4 }}
-            >
-              <Button
-                onClick={() => signIn('keycloak', { callbackUrl: '/' })}
-                variant='gradient'
-                size='lg'
-                className='group w-full py-6 text-base'
-              >
-                Sign In with SSO
-                <Icons.arrowRight className='ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1' />
-              </Button>
-            </motion.div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </div>
-  )
-}
-
-// Pending Approval Card - shown to users awaiting admin approval
-function PendingApprovalCard({ userName }: { userName?: string }) {
-  const firstName = userName?.split(' ')[0] || 'there'
-
-  return (
-    <div className='flex min-h-[500px] items-center justify-center'>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className='w-full max-w-lg'
-      >
-        <Card className='relative overflow-hidden bg-white shadow-float-lg'>
-          <CardWatermark opacity={4} scale={1} />
-          <CardHeader className='relative z-10 space-y-4 pb-6 text-center'>
-            <motion.div
-              className='mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-amber-500 shadow-xl'
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{
-                delay: 0.2,
-                type: 'spring',
-                stiffness: 200,
-                damping: 15,
-              }}
-            >
-              <Icons.clock className='h-10 w-10 text-white' />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-            >
-              <CardTitle className='text-display-5 font-bold text-brand-navy'>
-                Account Pending Approval
-              </CardTitle>
-              <p className='mt-2 text-muted-foreground'>
-                Welcome, {firstName}!
-              </p>
-            </motion.div>
-          </CardHeader>
-          <CardContent className='relative z-10 space-y-6 px-8 pb-8'>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.4 }}
-              className='space-y-4'
-            >
-              <div className='rounded-xl border border-amber-200 bg-amber-50 p-4 text-center'>
-                <p className='text-sm text-amber-800'>
-                  Your account has been created successfully, but it requires admin approval before you can access the full Command Center.
-                </p>
-              </div>
-
-              <div className='space-y-3 rounded-xl border border-gray-100 bg-gray-50 p-4'>
-                <h3 className='font-medium text-gray-900'>What happens next?</h3>
-                <ul className='space-y-2 text-sm text-gray-600'>
-                  <li className='flex items-start gap-2'>
-                    <Icons.checkCircle className='mt-0.5 h-4 w-4 text-emerald-500 shrink-0' />
-                    <span>An administrator will review your registration</span>
-                  </li>
-                  <li className='flex items-start gap-2'>
-                    <Icons.checkCircle className='mt-0.5 h-4 w-4 text-emerald-500 shrink-0' />
-                    <span>You&apos;ll receive an email once approved</span>
-                  </li>
-                  <li className='flex items-start gap-2'>
-                    <Icons.checkCircle className='mt-0.5 h-4 w-4 text-emerald-500 shrink-0' />
-                    <span>Then you can access all Command Center features</span>
-                  </li>
-                </ul>
-              </div>
-
-              <p className='text-center text-xs text-muted-foreground'>
-                Need urgent access? Contact your administrator.
-              </p>
-            </motion.div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </div>
-  )
-}
-
-// Main Dashboard
+// Main Dashboard — no auth required, renders directly
 export default function HomePage() {
-  const { session, status } = useSessionRefresh()
-
-  if (status === 'loading') {
-    return <DashboardSkeleton />
-  }
-
-  if (status !== 'authenticated') {
-    return <SignInCard />
-  }
-
-  // Check if user has pending role (and not user or admin roles)
-  const roles = session?.roles || []
-  const isPending = roles.includes('pending') && !roles.includes('user') && !roles.includes('admin')
-
-  if (isPending) {
-    return <PendingApprovalCard userName={session?.user?.name || undefined} />
-  }
-
   return (
     <motion.div
       className='space-y-6'
@@ -507,7 +303,7 @@ export default function HomePage() {
       animate='visible'
     >
       {/* Hero Section */}
-      <HeroSection userName={session?.user?.name || undefined} />
+      <HeroSection userName='Developer' />
 
       {/* Stats Grid - Bento style */}
       <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>

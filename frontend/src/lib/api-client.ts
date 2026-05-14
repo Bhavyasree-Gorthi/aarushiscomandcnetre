@@ -1,4 +1,4 @@
-import { getSession, signIn } from 'next-auth/react'
+import { getSession } from 'next-auth/react'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || ''
@@ -18,25 +18,14 @@ async function apiClientFetch<T = unknown>(endpoint: string, options: RequestIni
     headers.set('Authorization', `Bearer ${session.accessToken}`)
   }
 
-  // Handle session errors that occurred during a token refresh attempt.
-  if (session?.error === 'RefreshAccessTokenError') {
-    // Force sign-in to get a new, valid session.
-    await signIn('keycloak')
-    // Throw an error to stop the current, failing API call.
-    throw new Error('Session expired. Please sign in again.')
-  }
-
   // Construct the full URL: http://localhost:8001/app1/api/test
   const fullUrl = `${API_URL}${BASE_PATH}${endpoint}`
 
   const response = await fetch(fullUrl, { ...options, headers })
 
-  // If the backend returns a 401, it means the token is invalid or expired.
-  // This can happen if the backend is restarted or the user's session is revoked.
-  // We trigger a re-login to fix the session.
+  // If the backend returns a 401, log it but don't force redirect in dev mode
   if (response.status === 401) {
-    await signIn('keycloak')
-    throw new Error('Your session has expired. Please sign in again.')
+    console.warn('[API] 401 Unauthorized — check backend AUTH_BYPASS setting')
   }
 
   if (!response.ok) {

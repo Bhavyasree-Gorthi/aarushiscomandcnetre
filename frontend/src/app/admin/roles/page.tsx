@@ -3,7 +3,7 @@
 /**
  * Role Management Page
  * 
- * Allows admins to view, create, and delete Keycloak realm roles.
+ * Allows admins to view, create, and delete realm roles.
  * System roles (admin, user, pending) cannot be deleted.
  */
 
@@ -48,7 +48,7 @@ interface Role {
 }
 
 // System roles that cannot be deleted
-const SYSTEM_ROLES = ['admin', 'user', 'pending', 'offline_access', 'uma_authorization', 'default-roles-supervity']
+const SYSTEM_ROLES = ['admin', 'user', 'pending', 'offline_access', 'uma_authorization', 'default-roles-autopilot']
 
 export default function RolesPage() {
   const { data: session, status: sessionStatus } = useSession()
@@ -175,7 +175,7 @@ export default function RolesPage() {
         <div>
           <h1 className='text-display-4 font-bold text-brand-navy'>Role Management</h1>
           <p className='text-muted-foreground'>
-            Manage Keycloak realm roles for access control
+            Manage realm roles for access control
           </p>
         </div>
         <Button onClick={() => setIsCreateDialogOpen(true)}>

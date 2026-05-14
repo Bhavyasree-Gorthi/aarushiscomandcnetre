@@ -43,11 +43,38 @@ from ..schemas import (
 )
 from ..security import get_current_user
 from ..services.audit import audit
-from ..services.keycloak_admin import keycloak_admin
 
 log = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
+
+AUTH_BYPASS = os.getenv("AUTH_BYPASS", "false").lower() == "true"
+
+
+def _get_keycloak_admin():
+    """
+    Lazy-load keycloak_admin. When AUTH_BYPASS=true, this is not used.
+    Raises 501 if Keycloak admin service is not available.
+    """
+    try:
+        from ..services.keycloak_admin import keycloak_admin
+        return keycloak_admin
+    except ImportError:
+        raise HTTPException(
+            status_code=501,
+            detail="User management requires Keycloak. Set AUTH_BYPASS=false and configure Keycloak, or re-add keycloak_admin service.",
+        )
+
+
+# Alias for backward compatibility within this file
+# All call sites use `keycloak_admin.xxx()` — we make it lazy:
+class _LazyKeycloakAdmin:
+    """Proxy that defers to the real keycloak_admin on attribute access."""
+    def __getattr__(self, name):
+        return getattr(_get_keycloak_admin(), name)
+
+
+keycloak_admin = _LazyKeycloakAdmin()
 
 
 # =============================================================================
@@ -928,7 +955,7 @@ async def get_approved_domains(
     if setting and setting.value:
         domains = [d.strip() for d in setting.value.split(",") if d.strip()]
     else:
-        domains = ["supervity.ai"]
+        domains = ["example.com"]
 
     return ApprovedDomainsResponse(
         domains=domains,

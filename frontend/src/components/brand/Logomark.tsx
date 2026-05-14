@@ -13,7 +13,7 @@ interface LogomarkProps {
 }
 
 /**
- * The Supervity "S" logomark.
+ * The AutoPilot "S" logomark.
  * Use `variant="dark"` on light backgrounds, `variant="light"` on dark backgrounds.
  */
 export function Logomark({
@@ -29,7 +29,7 @@ export function Logomark({
   return (
     <Image
       src={src}
-      alt='Supervity'
+      alt='AutoPilot'
       width={size}
       height={size}
       className={cn('shrink-0', className)}

@@ -1,19 +1,17 @@
 'use client'
 
 import React from 'react'
-import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { Icons } from '@/components/ui/icons'
-import { NotificationCenter } from '@/components/NotificationCenter'
 import { useAI } from '@/context/AIContext'
+import { NotificationCenter } from '@/components/NotificationCenter'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -85,7 +83,7 @@ function SearchInput({
 
 // AI Manager trigger button - styled as a prominent tag/badge
 function AIManagerTrigger() {
-  const { openManager, hasPendingSuggestions, isManagerOpen } = useAI()
+  const { openManager, isManagerOpen } = useAI()
 
   return (
     <TooltipProvider>
@@ -98,16 +96,12 @@ function AIManagerTrigger() {
               'rounded-full',
               'text-sm font-medium',
               'transition-all duration-200',
-              // Default styling - gradient background
               'bg-gradient-to-r from-brand-navy to-brand-purple',
               'text-white',
               'shadow-md shadow-brand-navy/20',
-              // Hover effects
               'hover:shadow-lg hover:shadow-brand-purple/30',
               'hover:scale-[1.02]',
-              // Active state
               isManagerOpen && 'ring-2 ring-brand-cornflower ring-offset-2',
-              // Focus
               'focus:outline-none focus:ring-2 focus:ring-brand-cornflower focus:ring-offset-2'
             )}
             aria-label='Open AI Manager'
@@ -125,16 +119,6 @@ function AIManagerTrigger() {
             )}>
               <Icons.command className='h-2.5 w-2.5' />J
             </kbd>
-            {hasPendingSuggestions && (
-              <span
-                className={cn(
-                  'absolute -right-1 -top-1',
-                  'h-3 w-3 rounded-full',
-                  'bg-brand-cornflower border-2 border-white',
-                  'animate-pulse'
-                )}
-              />
-            )}
           </button>
         </TooltipTrigger>
         <TooltipContent side='bottom' className='sm:hidden'>
@@ -145,16 +129,9 @@ function AIManagerTrigger() {
   )
 }
 
-// User menu with dropdown using Radix UI
+// User menu with dropdown
 function UserMenu() {
-  const { data: session } = useSession()
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
-
-  if (!session?.user) return null
-
-  const handleLogout = () => {
-    window.location.href = `${basePath}/api/auth/logout`
-  }
+  const user = { name: 'Dev User', email: 'dev@autopilot.local' }
 
   return (
     <DropdownMenu>
@@ -167,20 +144,16 @@ function UserMenu() {
           )}
         >
           <div className='flex items-center gap-3'>
-            {/* User info - hidden on smaller screens */}
             <div className='hidden flex-col text-right lg:flex'>
               <span className='text-sm font-medium text-foreground'>
-                {session.user.name}
+                {user.name}
               </span>
               <span className='text-xs text-muted-foreground'>
-                {session.user.email}
+                {user.email}
               </span>
             </div>
-
-            {/* Avatar */}
             <Avatar
-              src={session.user.image}
-              fallback={session.user.name || session.user.email || '?'}
+              fallback={user.name}
               size='md'
               showRing
             />
@@ -195,26 +168,23 @@ function UserMenu() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align='end' className='w-64'>
-        {/* User info header */}
         <div className='border-b border-border/50 px-3 py-3'>
           <div className='flex items-center gap-3'>
             <Avatar
-              src={session.user.image}
-              fallback={session.user.name || session.user.email || '?'}
+              fallback={user.name}
               size='md'
             />
             <div className='min-w-0 flex-1'>
               <p className='truncate text-sm font-medium text-foreground'>
-                {session.user.name}
+                {user.name}
               </p>
               <p className='truncate text-xs text-muted-foreground'>
-                {session.user.email}
+                {user.email}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Menu items */}
         <div className='py-1'>
           <DropdownMenuItem className='gap-3 rounded-lg px-3 py-2.5'>
             <Icons.user className='h-4 w-4 text-muted-foreground' strokeWidth={1.5} />
@@ -223,20 +193,6 @@ function UserMenu() {
           <DropdownMenuItem className='gap-3 rounded-lg px-3 py-2.5'>
             <Icons.settings className='h-4 w-4 text-muted-foreground' strokeWidth={1.5} />
             <span>Settings</span>
-          </DropdownMenuItem>
-        </div>
-
-        <DropdownMenuSeparator />
-
-        {/* Logout */}
-        <div className='py-1'>
-          <DropdownMenuItem
-            onClick={handleLogout}
-            destructive
-            className='gap-3 rounded-lg px-3 py-2.5'
-          >
-            <Icons.logout className='h-4 w-4' strokeWidth={1.5} />
-            <span>Sign out</span>
           </DropdownMenuItem>
         </div>
       </DropdownMenuContent>

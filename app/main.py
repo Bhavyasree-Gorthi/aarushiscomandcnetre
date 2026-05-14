@@ -37,7 +37,6 @@ from .core.storage import GCSStorage, LocalStorage, StorageBackend
 from .middleware import AuditMiddleware
 from .routers import (
     admin_router,
-    ai_router,
     audit_router,
     auth_router,
     examples_router,
@@ -67,8 +66,8 @@ log.info(f"API Base Path: '{BASE_PATH}' (empty means root)")
 # =============================================================================
 
 app = FastAPI(
-    title="Supervity Template API",
-    description="Full-stack template with FastAPI, Next.js, PostgreSQL, and Keycloak",
+    title="AutoPilot API",
+    description="AI Command Center — Full-stack template with FastAPI, Next.js, and PostgreSQL",
     version="2.0.0",
     docs_url=f"{BASE_PATH}/api/docs",
     redoc_url=f"{BASE_PATH}/api/redoc",
@@ -149,9 +148,6 @@ api_router.include_router(audit_router)
 
 # Item CRUD operations
 api_router.include_router(items_router)
-
-# AI features (chat, policies, insights)
-api_router.include_router(ai_router)
 
 # Authorization pattern examples
 api_router.include_router(examples_router)
@@ -236,7 +232,7 @@ app.include_router(api_router)
 async def root():
     """Root endpoint - API information."""
     return {
-        "name": "Supervity Template API",
+        "name": "AutoPilot API",
         "version": "2.0.0",
         "docs": f"{BASE_PATH}/api/docs",
         "health": f"{BASE_PATH}/api/health",
@@ -251,7 +247,7 @@ if BASE_PATH:
     async def base_path_root():
         """Base path root endpoint - API information."""
         return {
-            "name": "Supervity Template API",
+            "name": "AutoPilot API",
             "version": "2.0.0",
             "docs": f"{BASE_PATH}/api/docs",
             "health": f"{BASE_PATH}/api/health",

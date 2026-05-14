@@ -26,7 +26,6 @@ const navItems = [
     title: 'System',
     items: [
       { href: '/settings', label: 'Settings', icon: Icons.settings },
-      { href: '/brand', label: 'Brand & Design', icon: Icons.palette },
     ],
   },
 ]
@@ -87,7 +86,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             </div>
             <div className='flex flex-col'>
               <SheetTitle className='font-display text-lg font-bold tracking-tight text-brand-navy'>
-                Supervity
+                AutoPilot
               </SheetTitle>
               <span className='text-[10px] font-medium uppercase tracking-widest text-brand-muted'>
                 Command Center

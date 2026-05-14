@@ -9,6 +9,7 @@ export interface Pattern {
   confidence: number
   sample_size?: number
   description?: string
+  is_demo?: boolean
 }
 
 interface PatternClusterProps {

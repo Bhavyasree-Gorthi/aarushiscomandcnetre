@@ -6,10 +6,11 @@ import { Button } from '@/components/ui/button'
 
 export interface ActionItem {
   title: string
-  priority: 'high' | 'medium' | 'low'
+  priority: 'critical' | 'high' | 'medium' | 'low'
   estimated_impact: string
   action_type?: string
   action_config?: Record<string, unknown>
+  is_demo?: boolean
 }
 
 interface ActionCardProps {
@@ -18,6 +19,11 @@ interface ActionCardProps {
 }
 
 const priorityConfig = {
+  critical: {
+    color: 'text-red-700',
+    bg: 'bg-red-200',
+    badge: 'bg-red-200 text-red-800',
+  },
   high: {
     color: 'text-red-600',
     bg: 'bg-red-100',

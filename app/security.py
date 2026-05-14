@@ -16,15 +16,24 @@ from .authz import AuthzEngine
 log = logging.getLogger(__name__)
 
 # --- Configuration ---
-# Keycloak is hosted on Google Cloud Run (external URL)
-# KEYCLOAK_SERVER_URL should be set to your Cloud Run URL
-# e.g., https://supervity-auth-xyz.a.run.app
+# Keycloak configuration for JWT-based authentication
 KEYCLOAK_SERVER_URL = os.getenv("KEYCLOAK_SERVER_URL")
 KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
 KEYCLOAK_AUDIENCE = os.getenv("KEYCLOAK_AUDIENCE")
 KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
 KEYCLOAK_CLIENT_SECRET = os.getenv("KEYCLOAK_CLIENT_SECRET")
-IS_AUTH_DEBUG = os.getenv("SUPERVITY_AUTH_DEBUG", "false").lower() == "true"
+IS_AUTH_DEBUG = os.getenv("AUTH_DEBUG", "false").lower() == "true"
+AUTH_BYPASS = os.getenv("AUTH_BYPASS", "false").lower() == "true"
+
+# Dev-mode auth bypass user (returned when AUTH_BYPASS=true)
+_BYPASS_USER = {
+    "sub": "dev-user-001",
+    "email": "developer@autopilot.local",
+    "name": "Dev User",
+    "preferred_username": "dev-user",
+    "realm_access": {"roles": ["admin", "user"]},
+    "active": True,
+}
 
 # Ensure no trailing slash
 if KEYCLOAK_SERVER_URL and KEYCLOAK_SERVER_URL.endswith("/"):
@@ -46,10 +55,12 @@ def _get_keycloak_urls() -> tuple[str, str]:
     return jwks, introspect
 
 
-if KEYCLOAK_SERVER_URL:
+if AUTH_BYPASS:
+    log.warning("⚠️  AUTH_BYPASS is enabled — all requests will be authenticated as Dev User. Do NOT use in production.")
+elif KEYCLOAK_SERVER_URL:
     log.info(f"Keycloak configured with server URL: {KEYCLOAK_SERVER_URL}")
 else:
-    log.warning("KEYCLOAK_SERVER_URL not set - authentication will fail until configured")
+    log.warning("KEYCLOAK_SERVER_URL not set and AUTH_BYPASS not enabled — authentication will fail until configured")
 
 # auto_error=False is critical. It makes the "Authorization" header optional.
 # This allows the same dependency (`verify_access`) to process requests for
@@ -108,6 +119,8 @@ def get_current_user(token: str | None = Depends(oauth2_scheme)) -> dict | None:
     It does NOT perform any authorization.
     """
     if token is None:
+        if AUTH_BYPASS:
+            return _BYPASS_USER
         return None
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -149,6 +162,10 @@ def verify_access(
     endpoint perform the check manually.
     """
     request_path = request.url.path
+
+    # --- Dev-mode auth bypass ---
+    if AUTH_BYPASS:
+        return
 
     # Dynamically get the base_path from the environment (same as in authz.py)
     base_path = os.getenv("BASE_PATH", "")

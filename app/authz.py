@@ -9,7 +9,7 @@ from fastapi import HTTPException, Request, status
 
 # --- Logger Setup ---
 log = logging.getLogger(__name__)
-IS_AUTH_DEBUG = os.getenv("SUPERVITY_AUTH_DEBUG", "false").lower() == "true"
+IS_AUTH_DEBUG = os.getenv("AUTH_DEBUG", "false").lower() == "true"
 
 
 class AuthzEngine:
