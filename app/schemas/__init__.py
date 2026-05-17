@@ -31,6 +31,11 @@ from .admin import (
 from .audit import AuditLogListResponse, AuditLogResponse, AuditStatsResponse
 from .auth import PendingStatusResponse, UserRegistration, UserRegistrationResponse
 from .item import Item, ItemBase, ItemCreate
+from .campaign import Campaign, CampaignCreate, CampaignRunRequest, CampaignStatusResponse
+from .agent import Agent, AgentCreate, AgentStatusUpdate
+from .policy import Policy, PolicyCreate, PolicyEvent
+from .workbench import WorkbenchItem, WorkbenchItemCreate, WorkbenchApprovalRequest, WorkbenchQueueResponse
+from .insights import Insight, InsightsResponse
 
 __all__ = [
     # Item schemas
@@ -79,4 +84,25 @@ __all__ = [
     "AuditLogResponse",
     "AuditLogListResponse",
     "AuditStatsResponse",
+    # Campaign schemas
+    "Campaign",
+    "CampaignCreate",
+    "CampaignRunRequest",
+    "CampaignStatusResponse",
+    # Agent schemas
+    "Agent",
+    "AgentCreate",
+    "AgentStatusUpdate",
+    # Policy schemas
+    "Policy",
+    "PolicyCreate",
+    "PolicyEvent",
+    # Workbench schemas
+    "WorkbenchItem",
+    "WorkbenchItemCreate",
+    "WorkbenchApprovalRequest",
+    "WorkbenchQueueResponse",
+    # Insights schemas
+    "Insight",
+    "InsightsResponse",
 ]

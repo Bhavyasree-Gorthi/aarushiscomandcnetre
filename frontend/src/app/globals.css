@@ -61,6 +61,10 @@
     /* Layout: Sidebar width for positioning */
     --sidebar-width: 16rem;
     --sidebar-collapsed-width: 4rem;
+
+    /* Local font fallbacks for offline builds */
+    --font-geologica: ui-sans-serif, system-ui, sans-serif;
+    --font-funnel: ui-sans-serif, system-ui, sans-serif;
   }
 
 }

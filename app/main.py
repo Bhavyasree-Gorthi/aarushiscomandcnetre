@@ -42,6 +42,12 @@ from .routers import (
     examples_router,
     health_router,
     items_router,
+    campaign_router,
+    agents_router,
+    policies_router,
+    workbench_router,
+    insights_router,
+    ai_router,
 )
 from .security import get_current_user, verify_access
 
@@ -153,6 +159,24 @@ api_router.include_router(items_router)
 
 # Authorization pattern examples
 api_router.include_router(examples_router)
+
+# Campaign orchestration (Supervity integration)
+api_router.include_router(campaign_router)
+
+# Agent execution tracking
+api_router.include_router(agents_router)
+
+# Policy enforcement visibility
+api_router.include_router(policies_router)
+
+# Workbench human review queue
+api_router.include_router(workbench_router)
+
+# Campaign insights & analytics
+api_router.include_router(insights_router)
+
+# AI Chat Manager interface
+api_router.include_router(ai_router)
 
 
 # =============================================================================
